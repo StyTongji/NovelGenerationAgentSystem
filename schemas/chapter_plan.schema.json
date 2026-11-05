@@ -1,0 +1,674 @@
+{
+  "$defs": {
+    "CharacterGoal": {
+      "properties": {
+        "character_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Character Id"
+        },
+        "temporary_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Temporary Ref"
+        },
+        "goal": {
+          "title": "Goal",
+          "type": "string"
+        }
+      },
+      "required": [
+        "goal"
+      ],
+      "title": "CharacterGoal",
+      "type": "object"
+    },
+    "DirectorOnlyNotes": {
+      "description": "Author-level planning metadata. MUST NEVER be projected into any\nWriter-visible view (see ChapterPlan.to_writer_safe).",
+      "properties": {
+        "strategic_rationale": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Strategic Rationale"
+        },
+        "secret_context": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Secret Context",
+          "type": "array"
+        },
+        "follow_up_seeds": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Follow Up Seeds",
+          "type": "array"
+        }
+      },
+      "title": "DirectorOnlyNotes",
+      "type": "object"
+    },
+    "EntityRef": {
+      "description": "ID-first entity reference; ``temporary_ref`` for proposed new entities.",
+      "properties": {
+        "character_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Character Id"
+        },
+        "temporary_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Temporary Ref"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        }
+      },
+      "title": "EntityRef",
+      "type": "object"
+    },
+    "ForeshadowingInstruction": {
+      "properties": {
+        "foreshadowing_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Foreshadowing Id"
+        },
+        "action": {
+          "title": "Action",
+          "type": "string"
+        },
+        "instruction": {
+          "title": "Instruction",
+          "type": "string"
+        }
+      },
+      "required": [
+        "action",
+        "instruction"
+      ],
+      "title": "ForeshadowingInstruction",
+      "type": "object"
+    },
+    "PlotDebtInstruction": {
+      "properties": {
+        "plot_debt_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Plot Debt Id"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "instruction": {
+          "title": "Instruction",
+          "type": "string"
+        }
+      },
+      "required": [
+        "instruction"
+      ],
+      "title": "PlotDebtInstruction",
+      "type": "object"
+    },
+    "PlotThreadInstruction": {
+      "properties": {
+        "plot_thread_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Plot Thread Id"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "action": {
+          "title": "Action",
+          "type": "string"
+        },
+        "instruction": {
+          "title": "Instruction",
+          "type": "string"
+        }
+      },
+      "required": [
+        "action",
+        "instruction"
+      ],
+      "title": "PlotThreadInstruction",
+      "type": "object"
+    },
+    "ProhibitedRevelation": {
+      "properties": {
+        "statement": {
+          "title": "Statement",
+          "type": "string"
+        },
+        "fact_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fact Id"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        }
+      },
+      "required": [
+        "statement"
+      ],
+      "title": "ProhibitedRevelation",
+      "type": "object"
+    },
+    "ProposedEntity": {
+      "description": "A new canonical entity the Director plans to introduce. Scene beats\nreference it via ``temporary_ref`` — the LLM must never invent UUIDs.",
+      "properties": {
+        "entity_type": {
+          "title": "Entity Type",
+          "type": "string"
+        },
+        "temporary_ref": {
+          "title": "Temporary Ref",
+          "type": "string"
+        },
+        "name_hint": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name Hint"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
+        },
+        "canonicalize": {
+          "default": true,
+          "title": "Canonicalize",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "entity_type",
+        "temporary_ref"
+      ],
+      "title": "ProposedEntity",
+      "type": "object"
+    },
+    "RevelationInstruction": {
+      "description": "Explicit reveal policy for one fact. ``hidden`` facts never appear\nhere; policies constrain what Phase 5 Writer may write.",
+      "properties": {
+        "fact_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fact Id"
+        },
+        "statement": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Statement"
+        },
+        "policy": {
+          "title": "Policy",
+          "type": "string"
+        },
+        "allowed_information": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Allowed Information"
+        },
+        "forbidden_information": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Forbidden Information"
+        }
+      },
+      "required": [
+        "policy"
+      ],
+      "title": "RevelationInstruction",
+      "type": "object"
+    },
+    "SceneBeat": {
+      "description": "Coarse scene beat produced by the Director. Full ScenePlan (POV,\ntransitions, expected length) belongs to the Phase 5 Scene Planner.",
+      "properties": {
+        "index": {
+          "minimum": 1,
+          "title": "Index",
+          "type": "integer"
+        },
+        "goal": {
+          "title": "Goal",
+          "type": "string"
+        },
+        "participants": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Participants",
+          "type": "array"
+        },
+        "location": {
+          "title": "Location",
+          "type": "string"
+        },
+        "conflict": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Conflict"
+        },
+        "beats": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Beats",
+          "type": "array"
+        },
+        "required_facts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Required Facts",
+          "type": "array"
+        },
+        "forbidden_reveals": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Forbidden Reveals",
+          "type": "array"
+        },
+        "narrative_mode": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Narrative Mode"
+        }
+      },
+      "required": [
+        "index",
+        "goal",
+        "location"
+      ],
+      "title": "SceneBeat",
+      "type": "object"
+    },
+    "StateExpectation": {
+      "properties": {
+        "character_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Character Id"
+        },
+        "expectation": {
+          "title": "Expectation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "expectation"
+      ],
+      "title": "StateExpectation",
+      "type": "object"
+    }
+  },
+  "description": "Structured plan of \"what happens in this chapter\" — never prose.\n\nThe plan itself is part of the information firewall: ``director_notes``\nand planning secrets stay out of the writer-safe projection.",
+  "properties": {
+    "chapter_number": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Chapter Number"
+    },
+    "chapter_goal": {
+      "title": "Chapter Goal",
+      "type": "string"
+    },
+    "chapter_role": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Chapter Role"
+    },
+    "emotional_direction": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Emotional Direction"
+    },
+    "pacing": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Pacing"
+    },
+    "participating_characters": {
+      "items": {
+        "$ref": "#/$defs/EntityRef"
+      },
+      "title": "Participating Characters",
+      "type": "array"
+    },
+    "primary_locations": {
+      "items": {
+        "$ref": "#/$defs/EntityRef"
+      },
+      "title": "Primary Locations",
+      "type": "array"
+    },
+    "proposed_entities": {
+      "items": {
+        "$ref": "#/$defs/ProposedEntity"
+      },
+      "title": "Proposed Entities",
+      "type": "array"
+    },
+    "required_events": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Required Events",
+      "type": "array"
+    },
+    "scenes": {
+      "items": {
+        "$ref": "#/$defs/SceneBeat"
+      },
+      "maxItems": 8,
+      "minItems": 1,
+      "title": "Scenes",
+      "type": "array"
+    },
+    "plot_threads_to_progress": {
+      "items": {
+        "$ref": "#/$defs/PlotThreadInstruction"
+      },
+      "title": "Plot Threads To Progress",
+      "type": "array"
+    },
+    "plot_debts_to_progress": {
+      "items": {
+        "$ref": "#/$defs/PlotDebtInstruction"
+      },
+      "title": "Plot Debts To Progress",
+      "type": "array"
+    },
+    "foreshadowing_actions": {
+      "items": {
+        "$ref": "#/$defs/ForeshadowingInstruction"
+      },
+      "title": "Foreshadowing Actions",
+      "type": "array"
+    },
+    "revelations": {
+      "items": {
+        "$ref": "#/$defs/RevelationInstruction"
+      },
+      "title": "Revelations",
+      "type": "array"
+    },
+    "prohibited_revelations": {
+      "items": {
+        "$ref": "#/$defs/ProhibitedRevelation"
+      },
+      "title": "Prohibited Revelations",
+      "type": "array"
+    },
+    "character_goals": {
+      "items": {
+        "$ref": "#/$defs/CharacterGoal"
+      },
+      "title": "Character Goals",
+      "type": "array"
+    },
+    "character_state_expectations": {
+      "items": {
+        "$ref": "#/$defs/StateExpectation"
+      },
+      "title": "Character State Expectations",
+      "type": "array"
+    },
+    "must_not_reveal": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Must Not Reveal",
+      "type": "array"
+    },
+    "hard_constraints": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Hard Constraints",
+      "type": "array"
+    },
+    "soft_preferences": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Soft Preferences",
+      "type": "array"
+    },
+    "expected_state_changes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Expected State Changes",
+      "type": "array"
+    },
+    "ending_hook": {
+      "title": "Ending Hook",
+      "type": "string"
+    },
+    "conflicts": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Conflicts",
+      "type": "array"
+    },
+    "director_notes": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DirectorOnlyNotes"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "chapter_goal",
+    "scenes",
+    "ending_hook"
+  ],
+  "title": "ChapterPlan",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

@@ -1,0 +1,194 @@
+{
+  "chapter_number": 1,
+  "chapter_goal": "林凡与苏青在天剑城执行宗门任务，发现一件与轮回古镜纹路相似的旧物，建立悬念，结尾留下指向下一章调查的线索。",
+  "chapter_role": "引入",
+  "emotional_direction": "探索与好奇，略带神秘不安",
+  "pacing": "中等，探索为主，互动细腻",
+  "participating_characters": [
+    {
+      "character_id": "a5448bd9-6a04-4b0d-a22b-8156c393cc9a",
+      "temporary_ref": null,
+      "name": "林凡"
+    },
+    {
+      "character_id": "7f7c174c-de1b-4c2f-8b82-863199713942",
+      "temporary_ref": null,
+      "name": "苏青"
+    }
+  ],
+  "primary_locations": [
+    {
+      "character_id": null,
+      "temporary_ref": "new_location_1",
+      "name": "天剑城"
+    }
+  ],
+  "proposed_entities": [
+    {
+      "entity_type": "location",
+      "temporary_ref": "new_location_1",
+      "name_hint": "天剑城",
+      "role": "任务地点",
+      "canonicalize": true
+    },
+    {
+      "entity_type": "item",
+      "temporary_ref": "new_item_1",
+      "name_hint": "纹路古物",
+      "role": "关键线索",
+      "canonicalize": true
+    }
+  ],
+  "required_events": [
+    "林凡与苏青抵达天剑城并领取宗门任务",
+    "在任务过程中接触到与轮回古镜纹路相似的旧物",
+    "旧物无法解读，但留下指向下一章调查的线索"
+  ],
+  "scenes": [
+    {
+      "index": 1,
+      "goal": "抵达天剑城，领取宗门任务，了解任务目标。",
+      "participants": [
+        "a5448bd9-6a04-4b0d-a22b-8156c393cc9a",
+        "7f7c174c-de1b-4c2f-8b82-863199713942"
+      ],
+      "location": "new_location_1",
+      "conflict": "无，但苏青对任务细节有所保留",
+      "beats": [
+        "林凡与苏青传送至天剑城，宗门执事在驻地交代任务：前往古物市场调查一批来历不明的法器。",
+        "苏青提醒林凡注意安全，暗示任务背后可能有更深原因。",
+        "二人离开驻地，前往古物市场。"
+      ],
+      "required_facts": [],
+      "forbidden_reveals": [
+        "轮回古镜的来历",
+        "玄清真人的秘密"
+      ],
+      "narrative_mode": null
+    },
+    {
+      "index": 2,
+      "goal": "在古物市场发现并接触与轮回古镜纹路相似的旧物，但无法解读，结尾留下线索。",
+      "participants": [
+        "a5448bd9-6a04-4b0d-a22b-8156c393cc9a",
+        "7f7c174c-de1b-4c2f-8b82-863199713942"
+      ],
+      "location": "new_location_1",
+      "conflict": "轻微竞争（其他买家对旧物有兴趣），但未升级为战斗",
+      "beats": [
+        "林凡在古物市场感知到一股微弱共鸣，追溯至一个不起眼的摊位。",
+        "摊主展示一件锈蚀的铜盘，纹路与轮回古镜惊人相似，林凡心中震动。",
+        "苏青察觉到林凡的异常，以任务为由催促离开，但林凡暗中记下铜盘细节。",
+        "铜盘被一名神秘买家抢先买走，林凡在后方发现铜盘掉落的一小块碎片，上面刻有半幅地图的残片。",
+        "苏青认出残片上的文字属于远古封印语，指向‘北荒遗迹’。",
+        "二人决定返回宗门汇报，同时林凡暗自决定后续追查。"
+      ],
+      "required_facts": [
+        "林凡持有轮回古镜（角色知识：林凡知道，苏青不知）",
+        "铜盘纹路与轮回古镜相似"
+      ],
+      "forbidden_reveals": [
+        "轮回古镜的真正用途",
+        "父亲失踪与轮回遗迹的关系",
+        "玄清真人的秘密"
+      ],
+      "narrative_mode": null
+    }
+  ],
+  "plot_threads_to_progress": [
+    {
+      "plot_thread_id": "8fd62392-5e5c-4b25-bd9d-411ed5c98e5f",
+      "title": "父亲失踪之谜",
+      "action": "hint",
+      "instruction": "通过铜盘纹路与轮回古镜的相似性，为林凡提供关于父亲失踪去向的微弱暗示，但林凡当前无法解读。"
+    }
+  ],
+  "plot_debts_to_progress": [],
+  "foreshadowing_actions": [
+    {
+      "foreshadowing_id": null,
+      "action": "establish",
+      "instruction": "暗示铜盘纹路与轮回古镜同源，为后续轮回遗迹的探索埋下伏笔。"
+    }
+  ],
+  "revelations": [
+    {
+      "fact_id": "7f9610af-0bb1-4573-b2d7-19f9a89bfd5c",
+      "statement": "轮回古镜的纹路与铜盘相似",
+      "policy": "hint_only",
+      "allowed_information": "铜盘纹路与林凡持有的秘密物品相似",
+      "forbidden_information": "古镜的具体来历、能力、与父亲的关系"
+    }
+  ],
+  "prohibited_revelations": [
+    {
+      "statement": "玄清真人与魔道势力存在秘密联系",
+      "fact_id": null,
+      "reason": "前三章不得完整揭露"
+    },
+    {
+      "statement": "父亲未死，去向与轮回遗迹有关",
+      "fact_id": "8fd62392-5e5c-4b25-bd9d-411ed5c98e5f",
+      "reason": "剧情尚未到揭露时机"
+    },
+    {
+      "statement": "轮回古镜的完整来历与能力",
+      "fact_id": "7f9610af-0bb1-4573-b2d7-19f9a89bfd5c",
+      "reason": "保持神秘感"
+    }
+  ],
+  "character_goals": [
+    {
+      "character_id": "a5448bd9-6a04-4b0d-a22b-8156c393cc9a",
+      "temporary_ref": null,
+      "goal": "完成宗门任务，同时暗中探究铜盘与轮回古镜的联系"
+    },
+    {
+      "character_id": "7f7c174c-de1b-4c2f-8b82-863199713942",
+      "temporary_ref": null,
+      "goal": "确保任务顺利，保护林凡，并留意他的异常反应"
+    }
+  ],
+  "character_state_expectations": [
+    {
+      "character_id": "a5448bd9-6a04-4b0d-a22b-8156c393cc9a",
+      "expectation": "练气九层，状态不变，但获得新线索"
+    },
+    {
+      "character_id": "7f7c174c-de1b-4c2f-8b82-863199713942",
+      "expectation": "筑基初期，状态不变，对铜盘产生怀疑但未深究"
+    }
+  ],
+  "must_not_reveal": [
+    "玄清真人与魔道势力的秘密",
+    "父亲未死信息",
+    "轮回古镜的完整来历与能力"
+  ],
+  "hard_constraints": [
+    "林凡不得非法跨境突破（练气九层不得直接跃至金丹）",
+    "前三章不得完整揭露玄清真人与魔道势力的秘密",
+    "前三章苏青不得死亡"
+  ],
+  "soft_preferences": [
+    "本章以探索、互动与悬念为主，减少大规模战斗"
+  ],
+  "expected_state_changes": [
+    "林凡获得铜盘碎片（未知用途）",
+    "苏青得知铜盘碎片上的远古文字指向北荒遗迹",
+    "父亲失踪之谜的线索被激活"
+  ],
+  "ending_hook": "林凡发现铜盘碎片上的半幅地图残片指向‘北荒遗迹’，而苏青认出那是远古封印文字，暗示下一章二人将前往北荒调查。",
+  "conflicts": [],
+  "director_notes": {
+    "strategic_rationale": "通过宗门任务自然引入天剑城，利用旧物与轮回古镜的相似性建立悬念，同时为父亲失踪之谜埋下线索，符合用户指令与硬约束。",
+    "secret_context": [
+      "林凡持有轮回古镜是秘密，苏青不知",
+      "铜盘是轮回遗迹的钥匙之一"
+    ],
+    "follow_up_seeds": [
+      "下一章可安排前往北荒遗迹，展开探索",
+      "神秘买家身份可后续揭示",
+      "铜盘碎片可进一步激活轮回古镜的反应"
+    ]
+  }
+}

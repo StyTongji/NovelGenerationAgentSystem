@@ -1,0 +1,258 @@
+{
+  "$defs": {
+    "EntityRef": {
+      "description": "ID-first entity reference; ``temporary_ref`` for proposed new entities.",
+      "properties": {
+        "character_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Character Id"
+        },
+        "temporary_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Temporary Ref"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        }
+      },
+      "title": "EntityRef",
+      "type": "object"
+    },
+    "ScenePlan": {
+      "description": "Executable per-scene plan expanded from chapter beats by the Scene\nPlanner. The planner only ever sees the WriterSafePlan, so a ScenePlan\nis author-safe by construction — planner_notes aside.",
+      "properties": {
+        "scene_id": {
+          "title": "Scene Id",
+          "type": "string"
+        },
+        "scene_index": {
+          "minimum": 1,
+          "title": "Scene Index",
+          "type": "integer"
+        },
+        "source_beat_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Beat Ids",
+          "type": "array"
+        },
+        "pov": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EntityRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "participants": {
+          "items": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "title": "Participants",
+          "type": "array"
+        },
+        "scene_goal": {
+          "title": "Scene Goal",
+          "type": "string"
+        },
+        "conflict": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Conflict"
+        },
+        "opening_state": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Opening State"
+        },
+        "required_actions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Required Actions",
+          "type": "array"
+        },
+        "required_outcomes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Required Outcomes",
+          "type": "array"
+        },
+        "allowed_information": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Allowed Information",
+          "type": "array"
+        },
+        "allowed_hints": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Allowed Hints",
+          "type": "array"
+        },
+        "emotional_target": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Emotional Target"
+        },
+        "pacing": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pacing"
+        },
+        "transition_in": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Transition In"
+        },
+        "transition_out": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Transition Out"
+        },
+        "target_chars": {
+          "default": 800,
+          "maximum": 5000,
+          "minimum": 100,
+          "title": "Target Chars",
+          "type": "integer"
+        },
+        "temporary_entities": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Temporary Entities",
+          "type": "array"
+        },
+        "planner_notes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Planner Notes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "scene_id",
+        "scene_index",
+        "pov",
+        "scene_goal"
+      ],
+      "title": "ScenePlan",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "chapter_number": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Chapter Number"
+    },
+    "scenes": {
+      "items": {
+        "$ref": "#/$defs/ScenePlan"
+      },
+      "maxItems": 12,
+      "minItems": 1,
+      "title": "Scenes",
+      "type": "array"
+    },
+    "planner_notes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Planner Notes",
+      "type": "array"
+    }
+  },
+  "required": [
+    "scenes"
+  ],
+  "title": "ScenePlanBatch",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

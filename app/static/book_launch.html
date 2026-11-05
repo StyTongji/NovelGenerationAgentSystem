@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>选题与开书 · 叙事工坊</title><link rel="stylesheet" href="/static/studio.css"><link rel="stylesheet" href="/static/book_launch.css">
+<script src="/static/book_launch.js" defer></script></head><body>
+<main class="launch-shell">
+  <header><a href="/studio">← 章节工坊</a><span>叙事工坊 / BOOK LAUNCH</span></header>
+  <h1>从选题，到一个能持续写下去的故事。</h1>
+  <p>用有来源的样本提出选题假设，确认世界与大纲后，接入已有的 LangGraph 章节引擎。</p>
+  <ol class="launch-flow" aria-label="开书与章节工作流">
+    <li data-step="sources"><small>确定性工具</small>榜单 / 文件资料</li><li data-step="research"><small>MarketResearch Agent</small>分析与选题</li>
+    <li data-step="topic"><small>人工确认</small>选择方向</li><li data-step="blueprint"><small>StoryArchitect Agent</small>世界与大纲</li>
+    <li data-step="approval"><small>人工确认</small>新小说初始化</li><li data-step="chapters"><small>既有章节 Agents</small>逐章生成与审阅</li>
+  </ol>
+  <div id="notice" role="status" class="launch-notice" hidden></div>
+  <div class="launch-grid"><section class="launch-card">
+    <h2>1 · 资料与创作目标</h2>
+    <label>创作要求<textarea id="brief" rows="4">玄幻，能力有明确代价，主角靠选择与行动推进，有配角自己的目标，避免重复打脸升级。</textarea></label>
+    <label>模式<select id="mode"><option value="demo">离线演示（合成资料，无收费调用）</option><option value="live">真实模型（需真实来源与 Key）</option></select></label>
+    <p id="mode-note" class="run-note" role="status">离线演示使用固定示例选题，不调用 SCNet。</p>
+    <div class="form-grid"><label>API 服务<select id="provider"></select></label><label>模型<input id="model" list="models"><datalist id="models"></datalist></label></div>
+    <label id="base-wrap" hidden>自定义 Base URL<input id="base" type="url" placeholder="https://example.com/v1"></label>
+    <label id="key-wrap" hidden>自定义 API Key（只在内存中保留）<input id="key" type="password" autocomplete="off"></label>
+    <p id="key-note" class="muted small"></p>
+    <details><summary>预算与模型能力</summary><div class="form-grid">
+      <label>规划阶段总 token 预算<input id="budget" type="number" value="200000" min="1000" max="2000000"></label>
+      <label>实际 HTTP 请求上限<input id="calls" type="number" value="12" min="1" max="100"></label>
+      <label>单次最大输出<input id="output" type="number" value="8192" min="1024" max="32768"></label>
+    </div><label>已确认的 runtime_capabilities JSON（可留空）<textarea id="capabilities" rows="2" placeholder='{"deepseek-flash":{"disable_thinking":true}}'></textarea></label>
+    <p class="muted small">保守预留输入与最大输出；缺失 usage 仍计入预留量。章节生成另有独立预算。</p></details>
+    <div class="launch-actions"><button id="sample-demo" class="button outline">载入演示资料</button><button id="collect" class="button outline">采集番茄玄幻小样本</button></div>
+    <label>导入资料（JSON / CSV）<input id="source-file" type="file" accept=".json,.csv"></label>
+    <p id="sample-info" class="muted small">尚未载入资料</p>
+    <details><summary>查看来源记录</summary><pre id="sample-view"></pre></details>
+    <button id="create" class="button primary">开始市场研究</button>
+  </section><section class="launch-card">
+    <h2>2 · 选择方向与审阅设定</h2>
+    <label>已有规划<select id="sessions"><option value="">新规划</option></select></label>
+    <div class="launch-actions"><button id="refresh" class="button outline">刷新记录</button><button id="resume" class="button outline" disabled>恢复</button><button id="cancel" class="button outline" disabled>取消规划</button><button id="update-budget" class="button outline" disabled>应用左侧新预算</button><button id="fork" class="button outline" disabled>复用研究并换模型</button></div>
+    <p class="muted small">换模型时先在左侧选择服务和模型，再点击“复用研究并换模型”；新规划有独立预算，原有花费仍保留。</p>
+    <p id="status">等待开始</p><p id="usage" class="muted small"></p>
+    <div id="findings"></div><div id="topics"></div>
+    <section id="plan" hidden><h3 id="plan-title"></h3><p id="premise"></p>
+      <p class="muted small">请审阅人物初始状态、秘密知情人、物品归属、能力规则与开篇十章。大纲中的未来事件不会写入已发生事实。</p>
+      <details open><summary>完整世界与大纲（作者视角，含秘密）</summary><textarea id="blueprint" rows="22" spellcheck="false" aria-label="可编辑的完整世界与大纲 JSON"></textarea><button id="save-blueprint" class="button outline">保存设定修订</button><p class="muted small">修改 JSON 后先保存；新版本会重新校验，重新确认后才能开书。原候选保留。</p></details>
+      <label>审阅人<input id="reviewer" placeholder="你的名字"></label>
+      <label><input id="approved" type="checkbox"> 我已审阅这份设定，同意创建新的小说</label>
+      <p id="hash" class="muted small"></p><button id="approve" class="button primary">确认设定并开书</button>
+    </section>
+    <section id="continue" hidden><h3>3 · 进入连续章节生成</h3><p>章节将使用已批准计划，生成一章后等待审阅，通过后才继续下一章。</p>
+      <div class="form-grid"><label>本次章节数<input id="chapter-count" type="number" value="3" min="1" max="10"></label>
+      <label>每章目标字数<input id="target" type="number" value="5000" min="1000" max="10000"></label>
+      <label>每章 token 上限<input id="chapter-tokens" type="number" value="150000" min="1000" max="1000000"></label>
+      <label>全部章节 token 上限<input id="run-tokens" type="number" value="2000000" min="1000" max="5000000"></label>
+      <label>每章 HTTP 请求上限<input id="chapter-calls" type="number" value="30" min="1" max="100"></label></div>
+      <button id="start" class="button primary">按已批准计划生成</button> <a id="studio-link" href="/studio" hidden>在章节工坊查看 →</a>
+    </section>
+    <details><summary>运行事件与 API 调用状态</summary><pre id="events"></pre></details>
+  </section></div>
+  <footer>新增 2 个规划角色；网页采集是工具。现有章节角色与事务提交机制继续复用。真实模型效果需要另行测试。</footer>
+</main></body></html>

@@ -1,0 +1,231 @@
+{
+  "$defs": {
+    "ContinuityCategory": {
+      "enum": [
+        "dead_character",
+        "item_ownership",
+        "ability_ownership",
+        "realm_state",
+        "illegal_breakthrough",
+        "hard_constraint",
+        "knowledge_leak",
+        "reveal_policy",
+        "plot_thread_state",
+        "proposed_entity_identity",
+        "timeline",
+        "location_travel",
+        "scene_continuity",
+        "plan_adherence",
+        "personality_drift",
+        "other"
+      ],
+      "title": "ContinuityCategory",
+      "type": "string"
+    },
+    "ContinuityIssue": {
+      "properties": {
+        "issue_id": {
+          "title": "Issue Id",
+          "type": "string"
+        },
+        "category": {
+          "$ref": "#/$defs/ContinuityCategory"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "scene_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scene Id"
+        },
+        "entity_refs": {
+          "items": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "title": "Entity Refs",
+          "type": "array"
+        },
+        "evidence_excerpt": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence Excerpt"
+        },
+        "author_explanation": {
+          "title": "Author Explanation",
+          "type": "string"
+        },
+        "suggested_action": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Suggested Action"
+        },
+        "source": {
+          "enum": [
+            "deterministic",
+            "llm"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "blocking": {
+          "default": false,
+          "title": "Blocking",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "issue_id",
+        "category",
+        "severity",
+        "author_explanation",
+        "source"
+      ],
+      "title": "ContinuityIssue",
+      "type": "object"
+    },
+    "EntityRef": {
+      "description": "ID-first entity reference; ``temporary_ref`` for proposed new entities.",
+      "properties": {
+        "character_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Character Id"
+        },
+        "temporary_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Temporary Ref"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        }
+      },
+      "title": "EntityRef",
+      "type": "object"
+    },
+    "Severity": {
+      "enum": [
+        "info",
+        "warning",
+        "error",
+        "critical"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "properties": {
+    "valid": {
+      "title": "Valid",
+      "type": "boolean"
+    },
+    "issues": {
+      "items": {
+        "$ref": "#/$defs/ContinuityIssue"
+      },
+      "title": "Issues",
+      "type": "array"
+    },
+    "highest_severity": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Severity"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "blocking_issue_count": {
+      "default": 0,
+      "title": "Blocking Issue Count",
+      "type": "integer"
+    },
+    "deterministic_issue_count": {
+      "default": 0,
+      "title": "Deterministic Issue Count",
+      "type": "integer"
+    },
+    "llm_issue_count": {
+      "default": 0,
+      "title": "Llm Issue Count",
+      "type": "integer"
+    },
+    "checked_scene_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Checked Scene Ids",
+      "type": "array"
+    },
+    "context_hash": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Context Hash"
+    },
+    "draft_hash": {
+      "default": "",
+      "title": "Draft Hash",
+      "type": "string"
+    }
+  },
+  "required": [
+    "valid"
+  ],
+  "title": "ContinuityReport",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

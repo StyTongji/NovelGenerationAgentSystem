@@ -1,0 +1,85 @@
+{
+  "valid": false,
+  "issues": [
+    {
+      "code": "evidence_not_in_draft",
+      "severity": "critical",
+      "operation_id": "op1",
+      "message": "Evidence quote not found in the referenced scene; evidence must be a verbatim draft sentence"
+    },
+    {
+      "code": "evidence_not_in_draft",
+      "severity": "critical",
+      "operation_id": "op3",
+      "message": "Evidence quote not found in the referenced scene; evidence must be a verbatim draft sentence"
+    },
+    {
+      "code": "evidence_not_in_draft",
+      "severity": "critical",
+      "operation_id": "op4",
+      "message": "Evidence quote not found in the referenced scene; evidence must be a verbatim draft sentence"
+    },
+    {
+      "code": "evidence_not_in_draft",
+      "severity": "critical",
+      "operation_id": "op5",
+      "message": "Evidence quote not found in the referenced scene; evidence must be a verbatim draft sentence"
+    },
+    {
+      "code": "evidence_not_in_draft",
+      "severity": "critical",
+      "operation_id": "op6",
+      "message": "Evidence quote not found in the referenced scene; evidence must be a verbatim draft sentence"
+    },
+    {
+      "code": "evidence_not_in_draft",
+      "severity": "critical",
+      "operation_id": "op8",
+      "message": "Evidence quote not found in the referenced scene; evidence must be a verbatim draft sentence"
+    },
+    {
+      "code": "evidence_not_in_draft",
+      "severity": "critical",
+      "operation_id": "op8",
+      "message": "Evidence quote not found in the referenced scene; evidence must be a verbatim draft sentence"
+    },
+    {
+      "code": "evidence_not_in_draft",
+      "severity": "critical",
+      "operation_id": "op9",
+      "message": "Evidence quote not found in the referenced scene; evidence must be a verbatim draft sentence"
+    },
+    {
+      "code": "knowledge_unknown_fact",
+      "severity": "critical",
+      "operation_id": "op2",
+      "message": "fact_statement '铜盘碎片上的纹路与轮回古镜上的纹路相同' matches no existing fact and no story_fact_create in this batch"
+    },
+    {
+      "code": "knowledge_unknown_fact",
+      "severity": "critical",
+      "operation_id": "op3",
+      "message": "fact_statement '铜盘碎片上的远古封印文字指向北荒遗迹' matches no existing fact and no story_fact_create in this batch"
+    },
+    {
+      "code": "knowledge_unknown_fact",
+      "severity": "critical",
+      "operation_id": "op4",
+      "message": "fact_statement '铜盘碎片上的远古封印文字指向北荒遗迹' matches no existing fact and no story_fact_create in this batch"
+    }
+  ],
+  "error_count": 11,
+  "warning_count": 0,
+  "duplicate_operation_ids": [],
+  "fingerprints": [
+    "6529181748d20ea429d9e556c2f1fcde9e76ad3824ad4fdfdb768a08e1d519a2",
+    "8ffca3c30ddf5506acc685e9826d788df92642d739637f24b07a9835281b134c",
+    "bfca7e4d6b1f77ab622b57d9c7239abf753b8e9f0c95cf874edd317e36995497",
+    "6c824ab825b55404698ae74ae31cf9d078ce848a4b1faa3f084b0f2d366231fe",
+    "b2bc0b71831901f34c7a6f2220810e525adb37a12cb13babcac589677a17ee7a",
+    "eefe42ee5213618679f8d1741269873042e867de82c71d22399c90c7355f9212",
+    "3d30e0e58833e1fedefbfeb4691c5c178eb42967496fdf71e247c24cb8be4312",
+    "a8eb953cdebdfbc12c8ea0b035cf798180454482b9f82aa3dbc77590f1549a3d",
+    "0a58b18c72141922e617e66b7ff458ecfa881224f97dbeba5695d47afe0e0dc6"
+  ]
+}

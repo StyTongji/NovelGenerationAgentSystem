@@ -1,0 +1,54 @@
+# Copy to config.yaml. NOVEL_* environment variables override YAML; nested keys use __.
+environment: development
+database_url: sqlite+aiosqlite:///./novel_engine.db
+llm:
+  default_provider: scnet
+  providers:
+    deepseek:
+      display_name: DeepSeek 官方
+      type: openai_compatible
+      base_url: https://api.deepseek.com
+      api_key_env: NOVEL_DEEPSEEK_API_KEY
+      model: deepseek-flash
+      models: [deepseek-flash, deepseek-v4-pro]
+      connect_timeout_seconds: 10
+      timeout_seconds: 120
+      deadline_seconds: 240
+      max_retries: 2
+    scnet:
+      display_name: SCNet 超算互联网
+      type: openai_compatible
+      base_url: https://api.scnet.cn/api/llm/v1
+      api_key_env: NOVEL_LLM_API_KEY
+      model: DeepSeek-V4.1-Flash-1017
+      models: [DeepSeek-V4.1-Flash-1017, Auto, DeepSeek-V4-Pro]
+      connect_timeout_seconds: 10
+      timeout_seconds: 120
+      deadline_seconds: 240
+      max_retries: 2
+  agents:
+    director: {temperature: 0.5, max_tokens: 8192}
+    scene_planner: {temperature: 0.5, max_tokens: 8192}
+    writer: {temperature: 0.85, max_tokens: 8192}
+    writer_repair: {temperature: 0.85, max_tokens: 8192}
+    memory_extractor: {temperature: 0.1, max_tokens: 8192}
+    continuity_checker: {temperature: 0.1, max_tokens: 8192}
+    literary_reviewer: {temperature: 0.3, max_tokens: 4096}
+retrieval:
+  vector_backend: in_memory
+  recent_chapters: 5
+  previous_chapter_tail_chars: 1200
+  top_k_events: 12
+  weight_semantic: 0.50
+  weight_recency: 0.25
+  weight_importance: 0.25
+generation_scenes_per_chapter_min: 3
+generation_scenes_per_chapter_max: 6
+generation_chapter_target_chars: 5000
+generation_scene_min_chars: 500
+generation_scene_max_chars: 1800
+generation_previous_scene_tail_chars: 1500
+generation_max_scene_plan_repairs: 2
+continuity_mode: hybrid
+continuity_max_repairs: 2
+continuity_block_finalize_on: [critical]

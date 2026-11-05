@@ -1,0 +1,961 @@
+{
+  "$defs": {
+    "CharacterStateChange": {
+      "properties": {
+        "character_id": {
+          "title": "Character Id",
+          "type": "string"
+        },
+        "field": {
+          "title": "Field",
+          "type": "string"
+        },
+        "expected_old_value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expected Old Value"
+        },
+        "proposed_new_value": {
+          "title": "Proposed New Value",
+          "type": "string"
+        },
+        "new_value_description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "New Value Description"
+        },
+        "requires_confirmation": {
+          "default": false,
+          "title": "Requires Confirmation",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "character_id",
+        "field",
+        "proposed_new_value"
+      ],
+      "title": "CharacterStateChange",
+      "type": "object"
+    },
+    "EventCandidate": {
+      "properties": {
+        "event_type": {
+          "title": "Event Type",
+          "type": "string"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "author_summary": {
+          "title": "Author Summary",
+          "type": "string"
+        },
+        "reader_safe_summary": {
+          "title": "Reader Safe Summary",
+          "type": "string"
+        },
+        "participant_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Participant Ids",
+          "type": "array"
+        },
+        "participant_temporary_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Participant Temporary Refs",
+          "type": "array"
+        },
+        "location_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Location Id"
+        },
+        "happened_at_story_time": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Happened At Story Time"
+        },
+        "importance": {
+          "default": 0.5,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Importance",
+          "type": "number"
+        },
+        "visibility": {
+          "$ref": "#/$defs/MemoryVisibility"
+        }
+      },
+      "required": [
+        "event_type",
+        "author_summary",
+        "reader_safe_summary"
+      ],
+      "title": "EventCandidate",
+      "type": "object"
+    },
+    "EvidenceRef": {
+      "properties": {
+        "evidence_id": {
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        }
+      },
+      "required": [
+        "evidence_id"
+      ],
+      "title": "EvidenceRef",
+      "type": "object"
+    },
+    "EvidenceSpan": {
+      "properties": {
+        "evidence_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence Id"
+        },
+        "scene_id": {
+          "title": "Scene Id",
+          "type": "string"
+        },
+        "exact_quote": {
+          "title": "Exact Quote",
+          "type": "string"
+        },
+        "start_char": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start Char"
+        },
+        "end_char": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Char"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        }
+      },
+      "required": [
+        "scene_id",
+        "exact_quote"
+      ],
+      "title": "EvidenceSpan",
+      "type": "object"
+    },
+    "FactRef": {
+      "description": "Exactly one canonical fact id or batch-local temporary fact ref.",
+      "properties": {
+        "fact_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fact Id"
+        },
+        "temporary_fact_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Temporary Fact Ref"
+        }
+      },
+      "title": "FactRef",
+      "type": "object"
+    },
+    "ForeshadowChange": {
+      "properties": {
+        "foreshadowing_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Foreshadowing Id"
+        },
+        "action": {
+          "enum": [
+            "introduced",
+            "echoed",
+            "advanced",
+            "resolved"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
+        "setup": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Setup"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        }
+      },
+      "required": [
+        "action"
+      ],
+      "title": "ForeshadowChange",
+      "type": "object"
+    },
+    "ItemChange": {
+      "properties": {
+        "item_id": {
+          "title": "Item Id",
+          "type": "string"
+        },
+        "change": {
+          "enum": [
+            "owner_transfer",
+            "location_change",
+            "status_change",
+            "consumed"
+          ],
+          "title": "Change",
+          "type": "string"
+        },
+        "expected_old_owner_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expected Old Owner Id"
+        },
+        "new_owner_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "New Owner Id"
+        },
+        "new_location_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "New Location Id"
+        },
+        "new_status": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "New Status"
+        }
+      },
+      "required": [
+        "item_id",
+        "change"
+      ],
+      "title": "ItemChange",
+      "type": "object"
+    },
+    "KnowledgeChange": {
+      "properties": {
+        "character_id": {
+          "title": "Character Id",
+          "type": "string"
+        },
+        "fact_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "fact_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fact Id"
+        },
+        "temporary_fact_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Temporary Fact Ref"
+        },
+        "fact_statement": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fact Statement"
+        },
+        "status": {
+          "enum": [
+            "known",
+            "suspected",
+            "believed_false",
+            "forgotten"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "belief_confidence": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Belief Confidence"
+        }
+      },
+      "required": [
+        "character_id",
+        "status"
+      ],
+      "title": "KnowledgeChange",
+      "type": "object"
+    },
+    "MemoryUpdateOperation": {
+      "properties": {
+        "operation_id": {
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "update_type": {
+          "$ref": "#/$defs/MemoryUpdateType"
+        },
+        "source_scene_id": {
+          "title": "Source Scene Id",
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/EvidenceSpan"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "evidence_refs": {
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence"
+        },
+        "planned": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Planned"
+        },
+        "unplanned_change": {
+          "default": false,
+          "title": "Unplanned Change",
+          "type": "boolean"
+        },
+        "event": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EventCandidate"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "character_state": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CharacterStateChange"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "knowledge": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/KnowledgeChange"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "relationship": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RelationshipChange"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "item": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ItemChange"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "story_fact": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/StoryFactCandidate"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "plot_thread": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PlotThreadChange"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "foreshadowing": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ForeshadowChange"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "plot_debt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PlotDebtChange"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "proposed_entity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProposedCanonicalEntity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "operation_id",
+        "update_type",
+        "source_scene_id"
+      ],
+      "title": "MemoryUpdateOperation",
+      "type": "object"
+    },
+    "MemoryUpdateType": {
+      "enum": [
+        "create_event",
+        "character_state_update",
+        "character_knowledge_update",
+        "relationship_update",
+        "item_update",
+        "story_fact_create",
+        "plot_thread_update",
+        "foreshadowing_update",
+        "plot_debt_update",
+        "propose_entity"
+      ],
+      "title": "MemoryUpdateType",
+      "type": "string"
+    },
+    "MemoryVisibility": {
+      "description": "Structured visibility provenance (Phase 3 filter-before-serialization).",
+      "properties": {
+        "reader_visible": {
+          "default": true,
+          "title": "Reader Visible",
+          "type": "boolean"
+        },
+        "known_by_character_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Known By Character Ids",
+          "type": "array"
+        },
+        "suspected_by_character_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Suspected By Character Ids",
+          "type": "array"
+        },
+        "secret_fact_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Secret Fact Ids",
+          "type": "array"
+        },
+        "author_only": {
+          "default": false,
+          "title": "Author Only",
+          "type": "boolean"
+        }
+      },
+      "title": "MemoryVisibility",
+      "type": "object"
+    },
+    "PlotDebtChange": {
+      "properties": {
+        "plot_debt_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Plot Debt Id"
+        },
+        "action": {
+          "enum": [
+            "created",
+            "progressed",
+            "resolved"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "due_chapter": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Due Chapter"
+        }
+      },
+      "required": [
+        "action"
+      ],
+      "title": "PlotDebtChange",
+      "type": "object"
+    },
+    "PlotThreadChange": {
+      "properties": {
+        "plot_thread_id": {
+          "title": "Plot Thread Id",
+          "type": "string"
+        },
+        "action": {
+          "enum": [
+            "introduced",
+            "advanced",
+            "echoed",
+            "resolved"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        }
+      },
+      "required": [
+        "plot_thread_id",
+        "action"
+      ],
+      "title": "PlotThreadChange",
+      "type": "object"
+    },
+    "ProposedCanonicalEntity": {
+      "description": "A temporary entity worth canonicalizing. NO UUID, NO INSERT here —\nPhase 8 canonicalization creates the real rows.",
+      "properties": {
+        "temporary_ref": {
+          "title": "Temporary Ref",
+          "type": "string"
+        },
+        "entity_type": {
+          "title": "Entity Type",
+          "type": "string"
+        },
+        "proposed_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Proposed Name"
+        },
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        }
+      },
+      "required": [
+        "temporary_ref",
+        "entity_type"
+      ],
+      "title": "ProposedCanonicalEntity",
+      "type": "object"
+    },
+    "RelationshipChange": {
+      "properties": {
+        "source_character_id": {
+          "title": "Source Character Id",
+          "type": "string"
+        },
+        "target_character_id": {
+          "title": "Target Character Id",
+          "type": "string"
+        },
+        "type": {
+          "title": "Type",
+          "type": "string"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        }
+      },
+      "required": [
+        "source_character_id",
+        "target_character_id",
+        "type"
+      ],
+      "title": "RelationshipChange",
+      "type": "object"
+    },
+    "SecrecyLevel": {
+      "enum": [
+        "public",
+        "limited",
+        "secret",
+        "top_secret"
+      ],
+      "title": "SecrecyLevel",
+      "type": "string"
+    },
+    "StoryFactCandidate": {
+      "properties": {
+        "statement": {
+          "title": "Statement",
+          "type": "string"
+        },
+        "temporary_fact_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Temporary Fact Ref"
+        },
+        "secrecy": {
+          "$ref": "#/$defs/SecrecyLevel",
+          "default": "public"
+        },
+        "reader_visible": {
+          "default": true,
+          "title": "Reader Visible",
+          "type": "boolean"
+        },
+        "category": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Category"
+        },
+        "visibility": {
+          "$ref": "#/$defs/MemoryVisibility"
+        }
+      },
+      "required": [
+        "statement"
+      ],
+      "title": "StoryFactCandidate",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "operations": {
+      "items": {
+        "$ref": "#/$defs/MemoryUpdateOperation"
+      },
+      "title": "Operations",
+      "type": "array"
+    },
+    "candidate_author_summary": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Candidate Author Summary"
+    },
+    "candidate_reader_summary": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Candidate Reader Summary"
+    }
+  },
+  "title": "MemoryUpdateBatch",
+  "type": "object"
+}

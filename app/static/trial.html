@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Novel Engine · 真人试验台</title>
+  <style>
+    :root { color-scheme: dark; --bg:#11131a; --panel:#191d29; --line:#30384d; --text:#f2f5fb; --muted:#9ba8c2; --accent:#76a9ff; --good:#72ddb0; --bad:#ff848f; }
+    * { box-sizing:border-box } body { margin:0; background:linear-gradient(135deg,#11131a,#191d29); color:var(--text); font:15px/1.55 Inter,"Noto Sans SC",system-ui,sans-serif; }
+    main { width:min(1180px,calc(100% - 32px)); margin:42px auto; } h1 { margin:0; font-size:28px; letter-spacing:-.04em } .lead { color:var(--muted); margin:6px 0 28px }
+    .grid { display:grid; grid-template-columns:360px 1fr; gap:18px } .card { background:rgba(25,29,41,.94); border:1px solid var(--line); border-radius:14px; padding:20px; box-shadow:0 12px 32px #0003; }
+    label { display:block; font-size:13px; color:var(--muted); margin:0 0 14px } input { display:block; width:100%; margin-top:6px; padding:10px 11px; border-radius:8px; border:1px solid var(--line); background:#10131c; color:var(--text); font:inherit; }
+    input:focus { outline:2px solid #76a9ff80; border-color:var(--accent) } .hint { color:var(--muted); font-size:12px; margin-top:-7px; margin-bottom:14px } .cost { color:#b7caf1; font-size:13px; min-height:20px; }
+    button { border:0; border-radius:8px; padding:10px 13px; font:600 14px inherit; cursor:pointer; background:var(--accent); color:#0c1830; } button[disabled] { opacity:.5; cursor:not-allowed } #stop { background:transparent; color:var(--muted); border:1px solid var(--line); margin-left:8px }
+    .run { margin-top:16px; color:var(--muted); font-size:13px } .panel-title { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px } .badge { color:var(--good); font-size:12px; border:1px solid #3f8971; padding:2px 8px; border-radius:99px; }
+    #logs { margin:0; height:360px; overflow:auto; padding:13px; border-radius:9px; background:#0d1017; border:1px solid var(--line); color:#b8c8e4; font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace; white-space:pre-wrap; word-break:break-word; }
+    #chapter { display:none; margin-top:18px; white-space:pre-wrap; font:16px/1.9 "Noto Serif SC","Songti SC",serif; } .error { color:var(--bad) } @media(max-width:800px) { main { margin:22px auto } .grid { grid-template-columns:1fr } #logs { height:260px } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>真人 LLM 试验台</h1>
+  <p class="lead">运行第 1 章 preview；不会提交 Canonical Story State。API Key 仅用于本次运行，不保存。</p>
+  <div class="grid">
+    <section class="card"><form id="trial-form">
+      <label>OpenAI-compatible Base URL<input id="base-url" type="url" placeholder="https://api.example.com/v1" required></label>
+      <label>API Key<input id="api-key" type="password" autocomplete="off" required></label>
+      <label>模型<input id="model" list="models" value="DeepSeek-V4-Pro" required></label>
+      <datalist id="models"><option value="GLM-5.3"><option value="GLM-5.2"><option value="DeepSeek-V4-Pro"><option value="DeepSeek-V4-Flash"><option value="Kimi-K2.5"><option value="MiniMax-M2.5"><option value="Qwen3.8-max"></datalist>
+      <p id="cost" class="cost"></p><button id="start" type="submit">开始第 1 章 Preview</button><button id="stop" type="button" disabled>停止</button>
+    </form><p id="run" class="run">等待开始</p></section>
+    <section class="card"><div class="panel-title"><strong>调用日志</strong><span id="state" class="badge">idle</span></div><pre id="logs">选择接口与模型后开始测试。</pre><article id="chapter"></article></section>
+  </div>
+</main>
+<script>
+  const rates={"GLM-5.3":"2.29","GLM-5.2":"0.90","DeepSeek-V4-Pro":"1.06","DeepSeek-V4-Flash":"0.13","Kimi-K2.5":"0.65","MiniMax-M2.5":"0.30","Qwen3.8-max":"2.00"};
+  const $=id=>document.getElementById(id), form=$("trial-form"), logs=$("logs"), state=$("state"), start=$("start"), stop=$("stop"), run=$("run"), chapter=$("chapter"); let controller;
+  function cost(){ $("cost").textContent=rates[$("model").value]?`综合扣减倍率：${rates[$("model").value]}`:"可输入自定义模型名" } cost(); $("model").addEventListener("input",cost);
+  function line(text, error=false){ logs.textContent+=`\n${text}`; if(error) logs.classList.add("error"); logs.scrollTop=logs.scrollHeight }
+  function setRunning(on){ start.disabled=on; stop.disabled=!on; state.textContent=on?"running":"idle"; state.style.color=on?"#ffd479":""; }
+  form.addEventListener("submit",async event=>{ event.preventDefault(); controller=new AbortController(); logs.textContent=""; logs.classList.remove("error"); chapter.style.display="none"; chapter.textContent=""; run.textContent="正在创建新的试验 run…"; setRunning(true);
+    try { const response=await fetch("/api/v1/trial/preview",{method:"POST",signal:controller.signal,headers:{"Content-Type":"application/json"},body:JSON.stringify({base_url:$("base-url").value,api_key:$("api-key").value,model:$("model").value})}); if(!response.ok||!response.body) throw new Error(`请求失败：HTTP ${response.status}`);
+      const reader=response.body.getReader(), decoder=new TextDecoder(), events={}; let buffer="";
+      while(true){ const {value,done}=await reader.read(); if(done) break; buffer+=decoder.decode(value,{stream:true}); let boundary; while((boundary=buffer.indexOf("\n\n"))>=0){ const block=buffer.slice(0,boundary); buffer=buffer.slice(boundary+2); const type=(block.match(/^event: (.+)$/m)||[,"message"])[1], raw=(block.match(/^data: (.+)$/m)||[,"{}"])[1], data=JSON.parse(raw); if(type==="log") line(data.line); if(type==="status"){line(`── ${data.message}`); run.textContent=`run: ${data.run_id}`;} if(type==="chapter"){chapter.textContent=data.text; chapter.style.display="block";} if(type==="done"){line(`── ${data.message}`); state.textContent="done"; state.style.color="var(--good)";} if(type==="error"){line(`错误：${data.message}`,true); state.textContent="error"; state.style.color="var(--bad)";} }
+      }
+    } catch(error) { if(error.name==="AbortError") line("已停止。",true); else line(`错误：${error.message}`,true); } finally { setRunning(false); controller=null; }
+  }); stop.addEventListener("click",()=>controller?.abort());
+</script>
+</body>
+</html>

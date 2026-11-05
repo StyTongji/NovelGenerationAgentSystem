@@ -1,0 +1,47 @@
+# Python environments, build products and caches
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+env/
+build/
+dist/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local databases and SQLite sidecars
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+
+# Local configuration and credentials; keep the example for new users
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+config.yaml
+
+# Generated runs may contain story drafts, prompts and usage records
+real_trial_runs/
+studio_runs/
+.local-tests/
+*.log
+*.jsonl
+
+# Editor and operating-system files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Accidental local Git-stat output, not a project file
+/e"

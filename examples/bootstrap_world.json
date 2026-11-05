@@ -1,0 +1,37 @@
+{
+  "novel": {
+    "title": "九霄问道",
+    "genre": "玄幻",
+    "premise": "少年林凡追查父亲失踪之谜，并逐步卷入上古轮回宗遗留的因果。"
+  },
+  "power_system": {
+    "name": "青玄修炼体系",
+    "realms": [
+      {"name": "炼体", "rank": 1},
+      {"name": "练气", "rank": 2},
+      {"name": "筑基", "rank": 3},
+      {"name": "金丹", "rank": 4},
+      {"name": "元婴", "rank": 5}
+    ],
+    "rules": [
+      "常态下跨两个大境界正面击杀几乎不可能",
+      "禁术可短时提升战力，但必须支付已设定代价"
+    ]
+  },
+  "characters": [
+    {"name": "林凡", "realm": "筑基后期", "personality": ["谨慎", "记仇", "表面低调"]},
+    {"name": "苏青", "realm": "筑基中期", "personality": ["冷静", "重承诺"]},
+    {"name": "玄清真人", "realm": "金丹后期", "personality": ["温和", "深藏不露"]}
+  ],
+  "initial_plot_threads": [
+    {
+      "title": "父亲失踪之谜",
+      "status": "active",
+      "truth": "林父主动进入轮回秘境寻找某人",
+      "public_summary": "林父数年前神秘失踪"
+    }
+  ],
+  "constraints": [
+    {"type": "hard", "statement": "父亲真实去向在150章前不得完全揭露"}
+  ]
+}

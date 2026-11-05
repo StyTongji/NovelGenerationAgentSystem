@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>叙事工坊 · Novel Engine</title>
+  <link rel="stylesheet" href="/static/studio.css">
+  <script src="/static/studio.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到工作区</a>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="小说与章节">
+      <a class="brand" href="/studio"><span class="brand-mark" aria-hidden="true">叙</span><span>叙事工坊<small>NOVEL ENGINE</small></span></a>
+      <div class="sidebar-label">你的故事 <span>WORKSPACE</span></div>
+      <label class="sr-only" for="novel-select">选择小说</label>
+      <select id="novel-select"><option value="">选择一本小说</option></select>
+      <button id="new-novel" class="button subtle wide" type="button"><span aria-hidden="true">＋</span> 创建新故事</button>
+      <a class="button subtle wide" href="/book-launch">选题研究与 Agent 开书 ↗</a>
+      <div class="sidebar-rule"></div>
+      <div class="sidebar-label">创作记录 <button id="refresh-runs" class="icon-button" type="button" aria-label="刷新创作记录">↻</button></div>
+      <label class="sr-only" for="run-select">选择创作记录</label>
+      <select id="run-select"><option value="">暂无创作记录</option></select>
+      <div class="chapter-nav-title"><span>章节目录</span><span id="chapter-nav-count">00</span></div>
+      <nav id="chapter-list" class="chapter-list" aria-label="章节目录"><p class="muted small">故事从第一章开始。</p></nav>
+      <div class="sidebar-footer"><span class="status-dot" id="connection-dot"></span><span id="connection-label">连接本地工作区</span><a href="/trial" title="打开原始 API 试验台">试验台 ↗</a></div>
+    </aside>
+
+    <main id="main" class="main">
+      <header class="topbar"><div class="breadcrumb">创作空间 <span>/</span> <strong id="book-name">新的故事，新的世界</strong></div><div class="topbar-actions"><span id="mode-badge" class="pill neutral">本地工作区</span><button class="button outline compact" id="export" type="button" disabled>导出正文 ↗</button></div></header>
+      <div id="alert" class="alert" role="alert" hidden><span id="alert-message"></span><button id="dismiss-alert" class="icon-button" type="button" aria-label="关闭提示">×</button></div>
+      <section class="page-heading"><div><p class="eyebrow">A STORY WORTH CONTINUING</p><h1 id="workspace-heading">让故事，接着发生。</h1><p id="workspace-subtitle">从一个念头出发，让规划、写作与记忆协同，为每一章留下可靠的来路。</p></div><button id="configure" class="button primary" type="button"><span aria-hidden="true">＋</span> 开始创作</button></section>
+      <section class="metrics" aria-label="本次创作概览">
+        <div><span class="metric-label">本次章节</span><strong id="metric-chapters">—<small> / —</small></strong></div>
+        <div><span class="metric-label">已生成字数</span><strong id="metric-characters">—<small> 字</small></strong></div>
+        <div><span class="metric-label">当前步骤</span><strong id="metric-stage" class="metric-text">等待开始</strong></div>
+        <div><span class="metric-label">创作状态</span><strong id="metric-status" class="metric-text">尚未运行</strong></div>
+      </section>
+      <div class="workspace-tabs" role="tablist" aria-label="工作区视图">
+        <button id="tab-manuscript" class="workspace-tab active" type="button" role="tab" aria-selected="true" aria-controls="panel-manuscript" data-view="manuscript">正文与审阅</button>
+        <button id="tab-workflow" class="workspace-tab" type="button" role="tab" aria-selected="false" aria-controls="panel-workflow" data-view="workflow">Agent 协作 <span id="agent-count" class="tab-count">—</span></button>
+        <button id="tab-world" class="workspace-tab" type="button" role="tab" aria-selected="false" aria-controls="panel-world" data-view="world">故事世界</button>
+        <div class="run-controls"><button id="resume" class="button outline compact" type="button" hidden>恢复创作</button><button id="cancel" class="button outline compact" type="button" disabled>暂停生成</button><button id="finish-run" class="button outline compact" type="button" disabled>结束此记录</button></div>
+      </div>
+      <p id="record-help" class="small muted" hidden>暂停后可恢复；结束记录会保留正文和已提交章节，并允许新建记录。新记录从最后已提交章节继续。</p>
+      <section id="recheck-options" class="run-note" hidden><strong>保留正文重新检查</strong><p>正文已保存时，可调整单次输出上限并重新检查、抽取记忆；必要时会修复有问题的场景。会产生新的模型调用，原候选保留。</p><label>单次最大输出 tokens<select id="recheck-output"><option value="8192">8,192</option><option value="16384" selected>16,384</option><option value="32768">32,768</option></select></label><button id="recheck-draft" class="button outline compact" type="button">保留正文并重新检查</button></section>
+      <section id="budget-panel" class="run-note" aria-label="任务预算" hidden><div class="section-title"><strong>调用与 token 预算</strong><button id="edit-budget" class="button outline compact" type="button">调整预算</button></div><p id="budget-summary" class="small muted"></p></section>
+
+      <section id="panel-manuscript" role="tabpanel" aria-labelledby="tab-manuscript">
+        <div id="empty-state" class="empty-state">
+          <div class="empty-illustration" aria-hidden="true"><div class="paper-back"></div><div class="paper-front"><span>第一章</span><i></i><i></i><i></i><b>未完待续</b></div><span class="leaf">✦</span></div>
+          <p class="eyebrow">YOUR NEXT CHAPTER</p><h2>好故事，值得一个完整的世界。</h2><p>创建世界与人物，给出本章方向。<br>Agent 完成草稿后，由你审阅正文与记忆，再继续下一章。</p><button id="empty-create" class="button primary" type="button">开启第一个故事 <span aria-hidden="true">↗</span></button>
+          <div class="empty-footnote"><span>01 规划</span><span>02 写作</span><span>03 审阅</span><span>04 记忆</span></div>
+        </div>
+        <div id="chapter-workspace" hidden>
+          <div class="chapter-toolbar"><div><span class="eyebrow" id="chapter-kicker">CHAPTER 01</span><h2 id="chapter-title">等待章节草稿</h2></div><span id="chapter-badge" class="pill neutral">等待</span></div>
+          <div class="document-layout">
+            <article class="manuscript-card"><div class="document-header"><span>正文草稿</span><span id="draft-note">生成后的场景会显示在这里</span></div><div id="draft-content" class="draft-content"></div><div id="revision-bar" class="revision-bar" hidden><span>修改后将重新进行连续性检查与记忆抽取，原审阅失效。</span><button id="save-revision" class="button primary compact" type="button">保存修订并重新检查</button></div></article>
+            <aside class="review-column" aria-label="章节审阅">
+              <section class="review-card"><div class="section-title"><h3>本章检查</h3><span class="tiny-label">CHECKS</span></div><div id="validation-checks" class="check-list"><p class="muted small">等待检查结果</p></div><div id="quality-report" class="quality-report"></div></section>
+              <section class="review-card"><div class="section-title"><h3>你的审阅</h3><span class="tiny-label">HUMAN IN THE LOOP</span></div><p class="small muted">可自行填写，或让 Agent 建议评分与逐条判断。采用建议后仍可修改，最终确认由你完成。</p><form id="approval-form"><label>审阅人<input id="reviewed-by" required maxlength="80" placeholder="输入姓名或昵称" autocomplete="name"></label><div id="quality-scores" class="score-list"></div><label>漏提的记忆或待改问题<textarea id="missing-memory" rows="2" placeholder="有问题请先修订；没有则留空"></textarea></label><p class="small muted">Agent 建议需要你核对；确有遗漏或错误时请先修订，不存在或已解决的建议可删除。</p><label class="checkbox-row"><input id="semantic-reviewed" type="checkbox" required><span>我已核对正文、证据与所有记忆变化</span></label><p id="approval-hint" class="small muted">草稿完成后可审阅提交。</p><button id="locate-review-issue" class="button outline compact" type="button" hidden>查看待处理记忆</button><button id="approve" class="button primary wide" type="submit" disabled>确认并提交本章 →</button></form></section>
+            </aside>
+          </div>
+          <section class="memory-section"><div class="section-title"><div><p class="eyebrow">WHAT THE STORY REMEMBERS</p><h2>记忆变更 · 逐条核对</h2></div><span id="memory-count" class="pill neutral">0 条</span></div><p class="muted small">这些变更将在确认提交后写入故事世界。正文引用由服务器解析，规划内容不能代替证据。</p><div id="memory-operations"></div><details id="memory-editor" class="technical-details"><summary>高级：编辑结构化记忆</summary><p class="small muted">只修改候选，不直接写入世界。保存后会重新校验并生成新的审阅版本。</p><label class="sr-only" for="memory-json">记忆 JSON</label><textarea id="memory-json" class="code-input" rows="15" spellcheck="false"></textarea><button id="save-memory" class="button outline" type="button">保存记忆并重新校验</button></details></section>
+        </div>
+      </section>
+
+      <section id="panel-workflow" role="tabpanel" aria-labelledby="tab-workflow" hidden>
+        <div class="section-title workflow-heading"><div><p class="eyebrow">EVERY ROLE, ONE STORY</p><h2>协作有分工，故事有来路。</h2></div><span id="live-label" class="pill neutral">等待运行</span></div>
+        <div class="workflow-card"><div class="graph-legend"><span><i class="legend-dot active"></i>当前步骤</span><span><i class="legend-dot completed"></i>已完成</span><span><i class="legend-dot"></i>未运行</span><span>点击节点查看职责</span></div><div id="workflow-graph" class="workflow-graph" aria-label="Agent 工作流可视化"></div><p id="node-description" class="node-description">规划、写作、检查、审阅和提交在同一个可恢复的流程中协作。</p></div>
+        <div id="role-cards" class="role-cards"></div>
+        <section class="event-card"><div class="section-title"><h3>运行时间线</h3><span id="event-count" class="tiny-label">0 EVENTS</span></div><p class="small muted">显示服务端阶段与 API 调用事件；完整草稿在「正文与审阅」中查看。</p><ol id="event-list" class="event-list"><li class="muted">创作开始后，运行事件会实时显示。</li></ol></section>
+      </section>
+
+      <section id="panel-world" role="tabpanel" aria-labelledby="tab-world" hidden>
+        <div class="section-title workflow-heading"><div><p class="eyebrow">THE CANONICAL WORLD</p><h2>故事会记得，发生过的一切。</h2></div><button id="refresh-world" class="button outline compact" type="button">刷新世界状态 ↻</button></div><p class="muted">这里展示已提交的正式状态。未审阅的草稿不会改变人物、物品与线索。</p><div id="world-state" class="world-state"><p class="muted">选择一本小说后查看故事世界。</p></div>
+      </section>
+      <footer class="main-footer"><span>Novel Engine <span class="footer-dot">·</span> 长篇叙事工作流</span><span>你的判断，始终是最后一步。</span></footer>
+    </main>
+  </div>
+
+  <dialog id="novel-dialog" aria-labelledby="new-novel-title"><form id="novel-form" class="dialog-form"><div class="dialog-heading"><div><p class="eyebrow">START WITH A SPARK</p><h2 id="new-novel-title">一个故事，从这里开始</h2></div><button class="icon-button" data-close="novel-dialog" type="button" aria-label="关闭">×</button></div><div class="form-grid"><label>小说名称<input id="novel-title" required maxlength="120" placeholder="例如：雾港来信"></label><label>题材<input id="novel-genre" value="玄幻悬疑" required maxlength="80"></label></div><label>世界背景与故事核心<textarea id="novel-synopsis" rows="4" required placeholder="这是怎样的世界？主角想要什么，又被什么阻挡？"></textarea></label><div class="form-grid"><label>主角姓名<input id="novel-protagonist" required maxlength="80" placeholder="例如：沈闻溪"></label><label>重要配角（每行一个）<textarea id="novel-companions" rows="2" placeholder="陆寒舟&#10;叶知秋"></textarea></label></div><label>不可违背的世界规则（每行一条）<textarea id="novel-rules" rows="3" placeholder="例如：传递记忆必须付出等长寿命"></textarea></label><div class="dialog-bottom"><p class="small muted">设定将初始化为正式世界，章节从这些事实出发。</p><button id="create-novel" class="button primary" type="submit">创建故事 →</button></div><p id="novel-form-error" class="form-error" role="alert" hidden></p></form></dialog>
+  <dialog id="run-dialog" aria-labelledby="run-title">
+    <form id="run-form" class="dialog-form">
+      <div class="dialog-heading"><div><p class="eyebrow">SET THE DIRECTION</p><h2 id="run-title">下一段故事，由你定调</h2></div><button class="icon-button" data-close="run-dialog" type="button" aria-label="关闭">×</button></div>
+      <div id="replace-run-notice" class="run-note" hidden><p id="replace-run-description"></p><label class="checkbox-row"><input id="replace-existing" type="checkbox"><span>结束旧记录并新建（保留原正文和已提交章节）</span></label></div>
+      <p id="continuation-notice" class="run-note" hidden></p>
+      <fieldset class="mode-options"><legend>运行方式</legend><label><input type="radio" name="mode" value="demo" checked><span><strong>离线演示</strong><small>短脚本素材，演示完整流程，不代表模型创作质量</small></span></label><label><input type="radio" name="mode" value="live"><span><strong>真实模型</strong><small>调用配置的服务，会产生账户用量</small></span></label></fieldset>
+      <div id="provider-options">
+        <div class="form-grid"><label>API 服务<select id="provider"></select></label><label>默认模型<input id="model" list="model-list" placeholder="输入精确模型名称"><datalist id="model-list"></datalist></label></div>
+        <div id="custom-provider-fields" hidden>
+          <label for="custom-base-url">API 地址（Base URL）<input id="custom-base-url" type="url" placeholder="https://你的服务地址/v1" autocomplete="off" spellcheck="false"></label>
+          <label for="custom-api-key">API Key<input id="custom-api-key" type="password" placeholder="输入该服务的密钥" autocomplete="off" spellcheck="false"></label>
+          <p class="small muted">支持 OpenAI-compatible Chat Completions 接口。密钥仅在服务运行期间保留，重启后需重新输入。</p>
+        </div>
+        <p id="provider-status" class="small muted"></p>
+        <details class="role-model-details"><summary>按 Agent 分配模型（选填）</summary><p class="small muted">留空使用默认模型。内置服务读取服务端密钥；自定义服务使用你本次填写的密钥。</p><div id="role-models" class="form-grid"></div></details>
+      </div>
+      <div class="form-grid"><label>连续章节数<input id="chapter-count" type="number" min="1" max="10" value="3" required></label><label>每章目标字数（真实模型）<input id="target-chars" type="number" min="1000" max="10000" step="100" value="3000" required></label></div>
+      <details id="new-budget-options"><summary>Token 与请求预算（真实模型）</summary><p class="small muted">是整章/整次任务的输入＋输出总量，不是单次输出长度。达到上限会暂停，不会清空已完成阶段。包含重试、修订和辅助审阅。</p><label>预算预设<select id="budget-preset"><option value="standard">默认 · 每章 150k / 30 次</option><option value="balanced">宽裕 · 每章 300k / 50 次</option><option value="extended">长篇 · 每章 500k / 80 次</option><option value="custom">自定义</option></select></label><div class="form-grid"><label>每章 token 上限<input id="chapter-tokens" type="number" min="1000" max="1000000" step="1000" value="150000" required></label><label>整次任务 token 上限<input id="run-tokens" type="number" min="1000" max="5000000" step="1000" value="2000000" required></label><label>每章 HTTP 请求上限<input id="max-calls" type="number" min="1" max="100" value="30" required></label></div><p class="small muted">请求前按输入 UTF-8 字节数＋最大输出保守预留，供应商返回 usage 后按实结算；未知用量仍占预留。上限不等于保证完成，也不是费用报价。</p></details>
+      <label id="output-token-option">单次最大输出 tokens（真实模型）<select id="max-output-tokens"><option value="">沿用各 Agent 配置（当前多为 4k / 8k）</option><option value="4096">4,096</option><option value="8192">8,192</option><option value="16384">16,384</option><option value="32768">32,768</option></select><span class="small muted">与每章总预算不同；部分模型的思考 token 也占此额度。更高上限会增加请求前的预留，不保证实际用满；需在模型支持范围内选择。</span></label>
+      <p id="demo-note" class="small muted">离线演示使用你的角色姓名与固定短脚本；不按目标字数扩写，也不执行创作方向。</p>
+      <label>整体创作方向<textarea id="direction" rows="3" placeholder="主角在失踪案中发现第一条线索。推进调查，不提前揭露幕后身份。"></textarea></label>
+      <details><summary>为每章单独补充方向</summary><label class="sr-only" for="chapter-directions">每行对应一章的方向</label><textarea id="chapter-directions" rows="3" placeholder="第一行对应本次第 1 章，第二行对应第 2 章……"></textarea></details>
+      <p class="run-note">每章生成后暂停，等待你核对正文与记忆；确认提交后才开始下一章。关闭页面或切换运行导致最后一个监看连接断开时，会停止正在进行的任务并保留已完成阶段，之后可恢复。</p>
+      <div class="dialog-bottom"><span class="small muted">新运行保留独立记录与草稿</span><button id="start-run" class="button primary" type="submit">开始创作 →</button></div><p id="run-form-error" class="form-error" role="alert" hidden></p>
+    </form>
+  </dialog>
+  <dialog id="budget-dialog" aria-labelledby="budget-title"><form id="budget-form" class="dialog-form"><div class="dialog-heading"><h2 id="budget-title">调整当前记录预算</h2><button class="icon-button" data-close="budget-dialog" type="button" aria-label="关闭">×</button></div><p id="budget-current" class="small muted"></p><div class="form-grid"><label>每章 token 上限<input id="edit-chapter-tokens" type="number" min="1000" max="1000000" step="1000" required></label><label>整次任务 token 上限<input id="edit-run-tokens" type="number" min="1000" max="5000000" step="1000" required></label><label>每章 HTTP 请求上限<input id="edit-max-calls" type="number" min="1" max="100" required></label></div><p class="small muted">仅修改调用额度，保留历史用量、原正文和阶段 checkpoint。保存不自动调用模型，之后点击「恢复创作」。正在运行时请先暂停。</p><p id="budget-form-error" class="form-error" role="alert" hidden></p><button id="save-budget" class="button primary" type="submit">保存预算</button></form></dialog>
+  <dialog id="credential-dialog" aria-labelledby="credential-title">
+    <form id="credential-form" class="dialog-form">
+      <div class="dialog-heading"><h2 id="credential-title">重新输入此任务的密钥</h2><button class="icon-button" data-close="credential-dialog" type="button" aria-label="关闭">×</button></div>
+      <p class="small muted">服务已重启，自定义密钥已清除。补充后可以继续使用保存的阶段和草稿。</p>
+      <label for="runtime-api-key">API Key<input id="runtime-api-key" type="password" required autocomplete="off" spellcheck="false"></label>
+      <p id="credential-error" class="form-error" role="alert" hidden></p>
+      <button id="save-credential" class="button primary" type="submit">使用此密钥继续</button>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>
