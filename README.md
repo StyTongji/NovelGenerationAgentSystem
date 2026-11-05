@@ -275,19 +275,4 @@ tests/            # pytest 套件（in-memory SQLite + FakeLLM，无需网络）
 - `schemas/`：关键 structured output JSON Schema
 - `examples/`：初始化世界示例
 
-## 第一阶段目标
 
-不要追求 UI 漂亮。先证明：
-
-```text
-创建世界
-→ 用户指导
-→ 规划章节
-→ 分 scene 写作
-→ 连续性检查
-→ 抽取事件/状态变化
-→ 更新 Canonical State
-→ 下一章正确读取历史
-```
-
-只要这个闭环稳定，后续再增加角色自主模拟、Retcon、分支世界线和高级 UI。
